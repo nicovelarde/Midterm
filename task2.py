@@ -3,25 +3,14 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import time
 
-# test using y=0.8sin(x-1)
-# x e [-1,3]
-# 100 training samples - uniformly distributed
-# make an 80% 20% split for training-testing
-
 def generate_data(samples, limit_up, limit_dwn, seed=42):
     np.random.seed(seed)
-    #Generate uniform samples:
     x = np.random.uniform(limit_dwn, limit_up,samples).reshape(-1,1)
-    #compute y
     y = 0.8 * np.sin(x - 1)
-
     return x , y
 
 X,y = generate_data(100,3,-3,42)
 X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2, train_size=0.8, random_state=42)
-
-# print(f"X_train: {X_train.shape}")
-# print(f"y_train: {y_train.shape}")
 
 """
 test_result
@@ -30,57 +19,95 @@ test_result
     - height of the regression tree
 """
 
+#Tasks 2:
+
 # Task 2.1
 # No limitation
-#time cost
+print("================================================Task 2.1 ==================================")
+
 start_time = time.time()
-tree= RegressionTree(X_train, y_train)
+tree = RegressionTree(X_train, y_train)
 stop_time = time.time()
-total_time = stop_time - start_time
-print(f"Total time for 2.1 is {total_time:.4f}")
+total_time = stop_time-start_time
+print(f"The time cost of building the tree is {total_time:.4f}")
 
 y_pred = tree.predict(X_test)
-mse= np.mean((y_test - y_pred) **2)
-print(f"The test error for 2.1 is {mse:.4f}")
+mse = np.mean((y_test - y_pred)**2)
+print(f"The test error is {mse:.4f}")
 
 height = tree.height()
-print(f"The height for 2.1 is {height}")
+print(f"The height of the resulting regression tree is {height}")
 
 # Task 2.2
-max_depth_half = int(height / 2)
-max_depth_three_quarters = int(height * 0.75)
-print("Half Depth:", max_depth_half)
-print("3/4 Depth:", max_depth_three_quarters)
-
+print("================================================Task 2.2 ==================================\n")
+print("======================Using 1/2 height=====================================\n")
 start_time = time.time()
-tree= RegressionTree(X_train, y_train, max_depth_half, control_by="depth" )
+tree2=RegressionTree(X_train,y_train,max_depth=14/2, control_by='depth')
+stop_time = time.time()
+total_time = stop_time-start_time
+print(f"The time cost of building the tree with 1/2 height is {total_time:.4f}")
+
+y_pred = tree2.predict(X_test)
+mse = np.mean((y_test - y_pred)**2)
+print(f"The test error is {mse:.4f}")
+
+height = tree2.height()
+print(f"The height of the resulting regression tree is {height}")
+
+print("======================Using 3/4 height=====================================\n")
+start_time = time.time()
+tree3=RegressionTree(X_train,y_train,max_depth=(14*(3/4)), control_by='depth')
 stop_time = time.time()
 total_time = stop_time - start_time
-print(f"Total time for 2.2 with 1/2 depth is {total_time:.4f}")
+print(f"The time cost of building the tree with 3/4 height is {total_time:.4f}")
 
-y_pred = tree.predict(X_test)
-mse= np.mean((y_test - y_pred) **2)
-print(f"The test error for 2.2 with 1/2 depth is {mse:.4f}")
+y_pred = tree3.predict(X_test)
+mse = np.mean((y_test - y_pred)**2)
+print(f"The test error is {mse:.4f}")
 
-height = tree.height()
-print(f"The height for 2.2 with half depth is {height}")
+height2 = tree3.height()
+print(f"The height of the resulting regression tree is {height2}")
 
+#Task 2.3
+print("================================================Task 2.3 ==================================\n")
+print("======================Using a leaf size limit of 2 =====================================\n")
 start_time = time.time()
-tree= RegressionTree(X_train, y_train, max_depth_three_quarters, control_by="depth")
-stop_time = time.time()
-total_time = stop_time - start_time
-print(f"Total time for 2.2 with 3/4 depth is {total_time:.4f}")
+tree4 = RegressionTree(X_train,y_train,min_samples_leaf=2,control_by='leaf')
+stop_time=time.time()
+total_time=stop_time - start_time
+print(f"The time cost of building the tree with a limit of 2 in leaf size is {total_time:.4f}")
 
-y_pred = tree.predict(X_test)
-mse= np.mean((y_test - y_pred) **2)
-print(f"The test error for 2.2 with 3/4 depth is {mse:.4f}")
+y_pred = tree4.predict(X_test)
+mse = np.mean((y_test - y_pred)**2)
+print(f"The test error is {mse:.4f}")
 
-height = tree.height()
-print(f"The height for 2.2 with 3/4 depth is {height}")
-# Task 2.3
+height = tree4.height()
+print(f"The height of the resulting tree is {height}")
 
+print("======================Using a leaf size limit of 4 =====================================\n")
+start_time = time.time()
+tree5 = RegressionTree(X_train,y_train,min_samples_leaf=4,control_by='leaf')
+stop_time=time.time()
+total_time=stop_time - start_time
+print(f"The time cost of building the tree with a limit of 4 in leaf size is {total_time:.4f}")
 
+y_pred = tree5.predict(X_test)
+mse = np.mean((y_test - y_pred)**2)
+print(f"The test error is {mse:.4f}")
 
+height = tree5.height()
+print(f"The height of the resulting tree is {height}")
 
+print("======================Using a leaf size limit of 8 =====================================\n")
+start_time = time.time()
+tree6 = RegressionTree(X_train,y_train,min_samples_leaf=8,control_by='leaf')
+stop_time=time.time()
+total_time=stop_time - start_time
+print(f"The time cost of building the tree with a limit of 8 in leaf size is {total_time:.4f}")
 
+y_pred = tree6.predict(X_test)
+mse = np.mean((y_test - y_pred)**2)
+print(f"The test error is {mse:.4f}")
 
+height = tree6.height()
+print(f"The height of the resulting tree is {height}")
