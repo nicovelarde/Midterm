@@ -135,7 +135,7 @@ class RegressionTree:
 
     def _calculate_height(self, node):
         if node is None or node.value is not None:
-            return 1
+            return 0
         return 1 + max(self._calculate_height(node.left), self._calculate_height(node.right))
 
 # Testing

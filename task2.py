@@ -42,7 +42,7 @@ print(f"The height of the resulting regression tree is {height}")
 print("================================================Task 2.2 ==================================\n")
 print("======================Using 1/2 height=====================================\n")
 start_time = time.time()
-tree2=RegressionTree(X_train,y_train,max_depth=14/2, control_by='depth')
+tree2=RegressionTree(X_train,y_train,max_depth=7, control_by='depth')
 stop_time = time.time()
 total_time = stop_time-start_time
 print(f"The time cost of building the tree with 1/2 height is {total_time:.4f}")
