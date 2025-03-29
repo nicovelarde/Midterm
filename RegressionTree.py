@@ -137,21 +137,3 @@ class RegressionTree:
         if node is None or node.value is not None:
             return 0
         return 1 + max(self._calculate_height(node.left), self._calculate_height(node.right))
-
-# Testing
-
-# X = numpy.array([[1], [2], [3], [4], [5]])
-# y = numpy.array([1, 3, 5, 7, 9])
-#
-# tree=RegressionTree(X, y, max_depth=2, control_by="depth")
-#
-# test_X = numpy.array([[1.5], [2.5], [3.5], [4.5]])
-#
-# # Predict using the tree
-# predictions = tree.predict(test_X)
-#
-# print("Predictions:", predictions)
-#
-# sample = numpy.array([2.5])
-# print("Decision Path for sample [2.5]:")
-# print(tree.decision_path(sample))
