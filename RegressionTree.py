@@ -1,4 +1,3 @@
-
 import numpy
 
 # Each node in the tree is represented by this class
@@ -17,7 +16,6 @@ class NodeTree:
         self.left=left
         self.right=right
         self.value=value
-
 
 class RegressionTree:
     def __init__(self,X, y, max_depth=None, min_samples_leaf=None, control_by=None):
@@ -77,7 +75,6 @@ class RegressionTree:
         right_subtree = self._build_tree(X[right_mask], y[right_mask], depth + 1)
         return NodeTree(feature_index=best_feature,threshold=best_threshold, left=left_subtree, right=right_subtree)
 
-
     def _predict_sample(self, x ,node):
         """
         Helper function that walks one sample down the entire tree
@@ -95,7 +92,6 @@ class RegressionTree:
         Returns predictions for each sample in X by walking down the tree.
         """
         return [self._predict_sample(sample, self.root) for sample in X]
-
 
     def decision_path(self, x):
         """
