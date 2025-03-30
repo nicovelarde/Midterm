@@ -1,6 +1,7 @@
 
 import numpy
 
+# Each node in the tree is represented by this class
 class NodeTree:
     """
     @:parameter
@@ -10,7 +11,6 @@ class NodeTree:
     right : right child
     value : for leaf nodes only. Average of y values
     """
-
     def __init__(self, feature_index=None , threshold=None, left=None, right=None, value=None):
         self.feature_index = feature_index
         self.threshold = threshold
@@ -18,18 +18,12 @@ class NodeTree:
         self.right=right
         self.value=value
 
-#Does not prune the tree
-# Max height or leaf size to terminate the building process of the tree
-
-# How to find the best feature to split the dataset - Minimize SSE
-    # For each feature
-# How to choose a proper split value -
 
 class RegressionTree:
     def __init__(self,X, y, max_depth=None, min_samples_leaf=None, control_by=None):
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
-        self.control_by = control_by
+        self.control_by = control_by #this one determines the stopping condition
         self.root= self._build_tree(X, y, depth=0)
 
     def _build_tree(self, X, y,depth):
@@ -39,17 +33,15 @@ class RegressionTree:
         if self.control_by=='leaf' and self.min_samples_leaf is not None and  len(y) <= self.min_samples_leaf:
             return NodeTree(value=numpy.mean(y))
 
-        #Initialize variables to track best split (best_SSE, best_feature, best_threshold)
+        #Variables to track the best split (best_SSE, best_feature, best_threshold)
         best_sse = float('inf') #Infinity because we want to minimize the sse
         best_feature= None
         best_threshold = None
 
-        #For each feature index in range(num_features):
-        #X.shape[1] number of features
         for feature_index in range(X.shape[1]):
             # Get unique values of this feature as potential thresholds
             thresholds = numpy.unique(X[:,feature_index])
-            #For each threshold
+
             for threshold in thresholds:
                 #Split data into left and right based on threshold
                 left_mask = X[:,feature_index] < threshold
@@ -63,7 +55,7 @@ class RegressionTree:
                 y_right = y[right_mask]
 
                 #Calculate SSE for left and right
-                #You NEED y_left and y_right because the split is based on X but the error is calculated on Y
+                #You need y_left and y_right because the split is based on X but the error is calculated on Y
                 sse_left = numpy.sum((y_left - numpy.mean(y_left))**2)
                 sse_right = numpy.sum((y_right - numpy.mean(y_right))**2)
                 total_sse = sse_left + sse_right
@@ -74,7 +66,6 @@ class RegressionTree:
                     best_feature = feature_index
                     best_threshold = threshold
 
-        #Recursion
         # If no valid split is found then return a leaf
         # Else, recursively split left and right with the best split found
         if best_feature is None:
@@ -86,17 +77,11 @@ class RegressionTree:
         right_subtree = self._build_tree(X[right_mask], y[right_mask], depth + 1)
         return NodeTree(feature_index=best_feature,threshold=best_threshold, left=left_subtree, right=right_subtree)
 
-    """
-    Helper function that walks one sample down the entire tree
-    """
+
     def _predict_sample(self, x ,node):
-        # If current node is a leaf (node.value is not None):
-        # return node.value
-        # Else
-        # Check if X[feature_index] <=threshold:
-        # Go left
-        # else:
-        # Go right
+        """
+        Helper function that walks one sample down the entire tree
+        """
         if node.value is not None:
             return node.value
         else:
@@ -104,17 +89,19 @@ class RegressionTree:
                 return self._predict_sample(x,node.left)
             else:
                 return self._predict_sample(x,node.right)
-    """
-    :returns the prediction for a given input sample
-    """
+
     def predict(self, X):
+        """
+        Returns predictions for each sample in X by walking down the tree.
+        """
         return [self._predict_sample(sample, self.root) for sample in X]
 
-    """
-    :returns the decision path of a given input sample
-    sequence of deduction rules to obtain the prediction
-    """
+
     def decision_path(self, x):
+        """
+        Returns a list of rules (splits) followed to reach the prediction.
+        Helpful to understand how the tree makes decisions.
+        """
         path = []
         self._decision_path(x, self.root, path)
         return path
@@ -130,7 +117,11 @@ class RegressionTree:
             path.append(f"X[{node.feature_index}] >= {node.threshold}")
             self._decision_path(x, node.right, path)
 
+    #Implemented for task 2
     def height(self):
+        """
+        Returns the depth of the tree
+        """
         return self._calculate_height(self.root)
 
     def _calculate_height(self, node):
