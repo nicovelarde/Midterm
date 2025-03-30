@@ -25,6 +25,7 @@ x2_tree = RegressionTree(X_train, y_train[:, 1], max_depth=10, control_by="depth
 
 # Recursive simulation
 x = np.random.uniform(-5, 5,2)  # initial state
+initial_x_true = x.copy()
 predicted_traj = [x.copy()]
 true_traj = [x.copy()]
 
@@ -33,14 +34,17 @@ for _ in range(20):
     x_pred_2 = x2_tree.predict([x])[0]
     x_pred = np.array([x_pred_1, x_pred_2])
     predicted_traj.append(x_pred)
+    x = x_pred  # use predicted for next step
 
+x = initial_x_true
+for _ in range(0,20):
     # ground truth using known equation
     x_true = np.array([
         0.9 * x[0] - 0.2 * x[1],
         0.2 * x[0] + 0.9 * x[1]
     ])
     true_traj.append(x_true)
-    x = x_pred  # use predicted for next step
+    x = x_true  # use predicted for next step
 
 predicted_traj = np.array(predicted_traj)
 true_traj = np.array(true_traj)

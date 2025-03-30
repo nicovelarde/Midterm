@@ -30,6 +30,8 @@ z_tree = RegressionTree(X_train, y_train[:, 1], max_depth=13, control_by="depth"
 
 x = np.random.uniform(-3, 3)
 z = np.random.uniform(0, 15)
+initial_true_x = x
+initial_true_z = z
 
 pred_traj = [(x, z)]
 true_traj = [(x, z)]
@@ -39,11 +41,16 @@ for _ in range(20):
     z_pred = z_tree.predict([[x, z]])[0]
     pred_traj.append((x_pred, z_pred))
 
+    x, z = x_pred, z_pred
+
+x = initial_true_x
+z = initial_true_z
+for _ in range(20):
     x_true = 0 if x > 1 else x + 0.2
     z_true = z + x_true
     true_traj.append((x_true, z_true))
 
-    x, z = x_pred, z_pred
+    x, z = x_true, z_true
 
 pred_traj = np.array(pred_traj)
 true_traj = np.array(true_traj)
