@@ -1,6 +1,7 @@
 import numpy as np
 from RegressionTree import RegressionTree
 import matplotlib.pyplot as plt
+import time
 
 def generate_program_data(n_samples=2000):
     np.random.seed(42)
@@ -23,10 +24,12 @@ def generate_program_data(n_samples=2000):
     return np.array(X), np.array(y)
 
 # Train model
-X_train, y_train = generate_program_data(2500)
-
-x_tree = RegressionTree(X_train, y_train[:, 0], max_depth=13, control_by="depth")
-z_tree = RegressionTree(X_train, y_train[:, 1], max_depth=13, control_by="depth")
+X_train, y_train = generate_program_data(5000)
+start_time = time.time()
+x_tree = RegressionTree(X_train, y_train[:, 0], min_samples_leaf=20, control_by="leaf")
+z_tree = RegressionTree(X_train, y_train[:, 1], min_samples_leaf=20, control_by="leaf")
+stop_time = time.time()
+total_time = stop_time - start_time
 
 x = np.random.uniform(-3, 3)
 z = np.random.uniform(0, 15)
@@ -78,3 +81,5 @@ print(f"MSE (scikit-learn): {mse:.6f}")
 
 manual_mse = np.mean((true_traj - pred_traj) ** 2)
 print(f"MSE (manual): {manual_mse:.6f}")
+
+print(f"The time to train the trees is {total_time}")
