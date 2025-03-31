@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from RegressionTree import RegressionTree
 import time
 
+
 def generate_linear_data(n_samples=2000):
     np.random.seed(42)
     X = []
@@ -19,10 +20,14 @@ def generate_linear_data(n_samples=2000):
 
     return np.array(X), np.array(y)
 
-X_train, y_train = generate_linear_data(500)
+# You can change the number of samples to improve results
+X_train, y_train = generate_linear_data()
 start_time = time.time()
-x1_tree = RegressionTree(X_train, y_train[:, 0], min_samples_leaf=5, control_by="leaf")
-x2_tree = RegressionTree(X_train, y_train[:, 1], min_samples_leaf=5, control_by="leaf")
+# You can tune  control_by "leaf" and "depth"
+# If it is leaf then you need to add the min_sample_leaf
+# If it is depth you need to add the max_depth
+x1_tree = RegressionTree(X_train, y_train[:, 0])
+x2_tree = RegressionTree(X_train, y_train[:, 1])
 stop_time = time.time()
 total_time = stop_time - start_time
 

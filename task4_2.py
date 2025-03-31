@@ -24,10 +24,15 @@ def generate_program_data(n_samples=2000):
     return np.array(X), np.array(y)
 
 # Train model
-X_train, y_train = generate_program_data(5000)
+# You can change the number of samples to improve results
+X_train, y_train = generate_program_data(2500)
 start_time = time.time()
-x_tree = RegressionTree(X_train, y_train[:, 0], min_samples_leaf=20, control_by="leaf")
-z_tree = RegressionTree(X_train, y_train[:, 1], min_samples_leaf=20, control_by="leaf")
+
+# You can tune  control_by "leaf" and "depth"
+# If it is leaf then you need to add the min_sample_leaf
+# If it is depth you need to add the max_depth
+x_tree = RegressionTree(X_train, y_train[:, 0])
+z_tree = RegressionTree(X_train, y_train[:, 1])
 stop_time = time.time()
 total_time = stop_time - start_time
 
